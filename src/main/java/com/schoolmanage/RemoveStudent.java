@@ -13,41 +13,43 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-@WebServlet("/ateacher")
-public class AddTeacher extends HttpServlet 
+
+@WebServlet("/restudent")
+public class RemoveStudent extends HttpServlet
 {
-	@Override
-	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
-	{
-		String id2=req.getParameter("id");
-		int id=Integer.parseInt(id2);
-		String name=req.getParameter("name");
-		String sub=req.getParameter("subject");
-		String sal1=req.getParameter("salary");
-		int sal=Integer.parseInt(sal1);
-		
-		
+protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
+{
+	String id1=req.getParameter("id");
+	int id=Integer.parseInt(id1);
+	
 	EntityManagerFactory emf=Persistence.createEntityManagerFactory("say");
 	EntityManager em=emf.createEntityManager();
 	EntityTransaction et=em.getTransaction();
 	
-	 Teacher t=new Teacher();
-	 t.setId(id);
-	 t.setName(name);
-	 t.setSubject(sub);
-	 t.setSalary(sal);
-	 
-	 et.begin();
-	 em.persist(t);
-	 et.commit();
-	 
-	PrintWriter pw=res.getWriter();
-	pw.write("Teacher successfully added");
+	Student s=em.find(Student.class,id);
 	
-	RequestDispatcher rd=req.getRequestDispatcher("TeacherCrudOps.html");
+	if(s!=null)
+	{
+	et.begin();
+	em.remove(s);
+	et.commit();
+	
+	PrintWriter pw=res.getWriter();
+	pw.write("Removed successfully");
+	RequestDispatcher rd=req.getRequestDispatcher("StudentCrudOps.html");
 	rd.include(req,res);
 	res.setContentType("text/html");
+	}
+	else
+	{
+		PrintWriter pw=res.getWriter();
+		pw.write("Id not found");
+		RequestDispatcher rd=req.getRequestDispatcher("StudentCrudOps.html");
+		rd.include(req,res);
+		res.setContentType("text/html");
+		
+	}
+	
 	
 }
 }
-

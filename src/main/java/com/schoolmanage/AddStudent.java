@@ -34,7 +34,7 @@ public class AddStudent extends HttpServlet
 	  Student s=new Student();
 	  s.setId(id);
 	  s.setName(name);
-	  s.setStream("stream");
+	  s.setStream(stream);
 	  s.setFees(fees);
 	  
 	  et.begin();
